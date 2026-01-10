@@ -3,6 +3,7 @@ package com.ms.user.service;
 import com.ms.user.dto.UserRequestDTO;
 import com.ms.user.dto.UserResponseDTO;
 import com.ms.user.model.User;
+import com.ms.user.producer.UserProducer;
 import com.ms.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserProducer userProducer;
 
     @Transactional
     public UserResponseDTO saveUser(UserRequestDTO userRequestDTO) {
         User user = new User(userRequestDTO.name(), userRequestDTO.email());
         User savedUser = userRepository.save(user);
+        userProducer.publishMessageEmail(savedUser);
         return new UserResponseDTO(savedUser.getUserId(), savedUser.getName(), savedUser.getEmail());
     }
 }
