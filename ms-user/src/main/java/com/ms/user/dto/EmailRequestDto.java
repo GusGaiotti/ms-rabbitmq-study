@@ -1,4 +1,6 @@
 package com.ms.user.dto;
 
-public class EmailRequestDto {
+import java.util.UUID;
+
+public record EmailRequestDto (UUID userId, String emailTo, String subject, String text){
 }
