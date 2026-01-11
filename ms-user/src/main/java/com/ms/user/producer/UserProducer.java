@@ -25,7 +25,7 @@ public class UserProducer {
                 user.getUserId(),
                 user.getEmail(),
                 "Cadastro realizado",
-                user.getName() + "Seja Bem-Vindo!"
+                user.getName() + " - Seja Bem-Vindo!"
         );
 
         rabbitTemplate.convertAndSend("", routingKey, emailRequestDto);
