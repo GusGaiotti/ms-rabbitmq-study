@@ -9,6 +9,7 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 5s
@@ -25,10 +26,11 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBIT_PASS}
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
 
   ms-email:
     build: ./ms-email
@@ -36,7 +38,9 @@ services:
     ports:
       - "8082:8082"
     environment:
+      - TZ=America/Sao_Paulo
       - DB_HOST=postgres
+      - DB_PORT=5432
       - RABBIT_HOST=rabbitmq
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -57,6 +61,7 @@ services:
       - "8081:8081"
     environment:
       - DB_HOST=postgres
+      - DB_PORT=5432
       - RABBIT_HOST=rabbitmq
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -67,3 +72,6 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
+volumes:
+  postgres_data:
