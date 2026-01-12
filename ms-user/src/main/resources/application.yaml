@@ -2,9 +2,9 @@ spring:
   application:
     name: ms-user
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/ms-user?serverTimezone=America/Sao_Paulo
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:123}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT}/ms-user?serverTimezone=America/Sao_Paulo
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -17,9 +17,9 @@ spring:
     locations: classpath:db/migration
   rabbitmq:
     host: ${RABBIT_HOST:localhost}
-    port: ${RABBIT_PORT:5672}
-    username: ${RABBIT_USER:guest}
-    password: ${RABBIT_PASS:guest}
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASS}
 
 server:
   port: 8081
